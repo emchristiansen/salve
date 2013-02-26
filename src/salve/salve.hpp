@@ -1,6 +1,7 @@
 #ifndef SALVE_HPP_
 #define SALVE_HPP_
 
+#include "macros.hpp"
 #include "CanBuildFrom.hpp"
 #include "collections.hpp"
 #include "Comparable.hpp"

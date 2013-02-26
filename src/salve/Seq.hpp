@@ -3,6 +3,7 @@
 
 #include "Contains.hpp"
 #include "collections.hpp"
+#include "macros.hpp"
 
 namespace salve {
 
@@ -44,7 +45,7 @@ struct SeqDefinition {
 
   // TODO: Macro to remove boilerplate.
   // TODO: Macro to put call to this in anon namespace in header files.
-  static void verify() {
+  static bool verify() {
     typedef decltype(Seq<CollectionT, ContainsT>::head) HeadT;
     const bool headEquals = is_same<decltype(head), HeadT>::value;
     static_assert(headEquals, "Seq not implemented properly");
@@ -60,6 +61,8 @@ struct SeqDefinition {
     typedef decltype(Seq<CollectionT, ContainsT>::last) LastT;
     const bool lastEquals = is_same<decltype(last), LastT>::value;
     static_assert(lastEquals, "Seq not implemented properly");
+
+    return true;
   }
 };
 
@@ -138,6 +141,8 @@ static ElementT last(const vector<ElementT>& v) {
   return v.at(v.size() - 1);
 }
 };
+
+verifyImplementation(Seq, vector<int>)
 
 }  // namespace salve
 

@@ -7,6 +7,7 @@
 
 #include "Contains.hpp"
 #include "CanBuildFrom.hpp"
+#include "macros.hpp"
 
 namespace salve {
 
@@ -36,14 +37,16 @@ template<typename FromCollectionT, typename FunctionT,
 struct FunctorDefinition {
   // Uses trailing return types to work with lambdas. See:
   // http://stackoverflow.com/questions/7950680/how-can-i-pass-a-lambda-c11-into-a-templated-function
-  static auto fmap(const FunctionT& f,
-                  const FromCollectionT& collection) ->
-   typename CanBuildFrom<FromCollectionT, decltype(f(fakeInstance(FromElementT)))>::ToT;
+  static auto fmap(
+      const FunctionT& f,
+      const FromCollectionT& collection) ->
+      typename CanBuildFrom<FromCollectionT, decltype(f(fakeInstance(FromElementT)))>::ToT;
 
-  static void verify() {
+  static bool verify() {
     typedef decltype(Functor<FromCollectionT, FunctionT>::fmap) FMapT;
     const bool verifyFMap = is_same<decltype(fmap), FMapT>::value;
     static_assert(verifyFMap, "Functor not properly implemented");
+    return true;
   }
 };
 
@@ -80,6 +83,8 @@ struct Functor<vector<FromElementT>, FunctionT> {
   }
 };
 
-}// namespace salve
+//verifyImplementation(Functor, vector<int>, function<int(double)>)
+
+}  // namespace salve
 
 #endif /* FUNCTOR_HPP_ */

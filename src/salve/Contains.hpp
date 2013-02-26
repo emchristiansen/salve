@@ -3,6 +3,8 @@
 
 #include <type_traits>
 
+#include "macros.hpp"
+
 /////////////////////
 
 namespace salve {
@@ -19,10 +21,13 @@ struct Contains;
 
 template<typename CollectionT>
 struct ContainsDefinition {
-  static void verify() {
+  static bool verify() {
     typedef typename Contains<CollectionT>::ElementType Trash;
+    return true;
   }
 };
+
+////////////////////////////////
 
 /**
  * This says vector<E> contains type E.
@@ -33,6 +38,8 @@ struct Contains<vector<ElementT>> {
   // TODO: Rename
   typedef ElementT ElementType;
 };
+
+verifyImplementation(Contains, vector<int>)
 
 } // namespace salve
 

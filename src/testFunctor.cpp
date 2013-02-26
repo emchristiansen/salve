@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 
+#include <functional>
 #include <type_traits>
 
 #include "salve/Functor.hpp"

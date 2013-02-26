@@ -9,8 +9,6 @@ using namespace std;
 using namespace salve;
 
 TEST(TestSeq, VectorInt) {
-  SeqDefinition<vector<int>>::verify();
-
   vector<int> ints = { 1, 2, 3, 4 };
 
   EXPECT_EQ(head(ints), 1);

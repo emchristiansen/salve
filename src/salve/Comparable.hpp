@@ -2,6 +2,7 @@
 #define COMPARABLE_HPP_
 
 #include <typeinfo>
+#include "macros.hpp"
 
 //////////////////////////////////
 
@@ -16,10 +17,11 @@ template<typename A>
 struct ComparableDefinition {
   static bool equals(const A& left, const A& right);
 
-  static void verify() {
+  static bool verify() {
     typedef decltype(Comparable<A>::equals) EqualsT;
     const bool verifyEquals = is_same<decltype(equals), EqualsT>::value;
     static_assert(verifyEquals, "Comparable not properly implemented");
+    return true;
   }
 };
 
@@ -55,6 +57,8 @@ struct Comparable<vector<ElementT>> {
     return true;
   }
 };
+
+verifyImplementation(Comparable, vector<int>)
 
 } // namespace salve
 

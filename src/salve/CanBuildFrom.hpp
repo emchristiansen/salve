@@ -1,6 +1,8 @@
 #ifndef CANBUILDFROM_HPP_
 #define CANBUILDFROM_HPP_
 
+#include "macros.hpp"
+
 namespace salve {
 
 using namespace std;
@@ -17,8 +19,9 @@ struct CanBuildFrom;
 
 template<typename FromT, typename ElementT>
 struct CanBuildFromDefinition {
-  static void verify() {
+  static bool verify() {
     typedef typename CanBuildFrom<FromT, ElementT>::ToT Trash;
+    return true;
   }
 };
 
@@ -31,6 +34,8 @@ template<typename FromElementT, typename ToElementT>
 struct CanBuildFrom<vector<FromElementT>, ToElementT> {
   typedef vector<ToElementT> ToT;
 };
+
+verifyImplementation(CanBuildFrom, vector<int>, int)
 
 } // namespace salve
 

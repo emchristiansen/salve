@@ -2,6 +2,7 @@
 #define TYPECLASSES_HPP_
 
 #include "collections.hpp"
+#include "macros.hpp"
 
 namespace salve {
 
@@ -19,10 +20,11 @@ template<typename A>
 struct ShowableDefinition {
   static string show(const A& a);
 
-  static void verify() {
+  static bool verify() {
     typedef decltype(Showable<A>::show) ShowT;
     const bool verifyShow = is_same<decltype(show), ShowT>::value;
     static_assert(verifyShow, "Showable not properly implemented");
+    return true;
   }
 };
 
@@ -48,6 +50,10 @@ struct Showable<string> {
   }
 };
 
+verifyImplementation(Showable, string)
+
+////////////////////////////////////
+
 /**
  * Says an int is Showable.
  */
@@ -59,6 +65,10 @@ struct Showable<int> {
     return buffer.str();
   }
 };
+
+verifyImplementation(Showable, int)
+
+////////////////////////////////////
 
 /**
  * Says a double is Showable.
@@ -72,6 +82,10 @@ struct Showable<double> {
     return buffer.str();
   }
 };
+
+verifyImplementation(Showable, double)
+
+////////////////////////////////////////
 
 /**
  * Says a vector of Showables is Showable.
@@ -96,6 +110,8 @@ struct Showable<vector<ElementT>> {
     return buffer.str();
   }
 };
+
+verifyImplementation(Showable, vector<int>)
 
 }  // namespace salve
 
