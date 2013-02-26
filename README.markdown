@@ -36,3 +36,12 @@ Finally, [Boost Phoenix](http://www.boost.org/doc/libs/1_53_0/libs/phoenix/doc/h
 I started Salve because neither BCCL and Boost Phoenix appear to meet my (relatively simple) needs.
 Boost Phoenix has great promise, but I found it too hard to use (truly epic compiler errors when things aren't perfect).
 Salve aims to be simpler and easier to use while retaining the essential power of BCCL and Phoenix.
+
+## TODO
+
+1. Write macro to generate "verify" methods.
+2. Write macro to check "verify" method for given implementation.
+3. Highly document some representative subset of the code to make it easier to pick up.
+4. Add some more methods to Seq: filter, count, others at: http://www.scala-lang.org/api/current/index.html#scala.collection.Seq
+5. Add support for zipping and unzipping.
+6. Run code formatter to make source pretty.
