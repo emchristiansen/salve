@@ -14,6 +14,11 @@ using namespace std;
 
 //////////////////////////////////////////
 
+/**
+ * Returns a value of the specified type.
+ * Used only for compile-time hackery; evaluating this at runtime will
+ * cause a segmentation fault.
+ */
 // TODO: Move this somewhere better.
 #define fakeInstance(T) *reinterpret_cast<T*>(0)
 
