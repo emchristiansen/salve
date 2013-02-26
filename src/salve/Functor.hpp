@@ -14,63 +14,67 @@ using namespace std;
 
 //////////////////////////////////////////
 
+// TODO: Move this somewhere better.
+#define fakeInstance(T) *reinterpret_cast<T*>(0)
+
 /**
  * Fancy name for anything which can be mapped over. We use "fmap" to
  * distinguish from C++ dictionaries.
  */
-template<typename CollectionT, typename OtherElementT,
-    typename ContainsT = Contains<CollectionT>,
-    typename CanBuildFromT = CanBuildFrom<CollectionT, OtherElementT>>
+template<typename FromCollectionT, typename FunctionT,
+    typename FromElementT = typename Contains<FromCollectionT>::ElementType>
 struct Functor;
 
-template<typename CollectionT, typename OtherElementT,
-    typename ContainsT = Contains<CollectionT>,
-    typename CanBuildFromT = CanBuildFrom<CollectionT, OtherElementT>>
+template<typename FromCollectionT, typename FunctionT,
+    typename FromElementT = typename Contains<FromCollectionT>::ElementType,
+    typename FunctorT = Functor<FromCollectionT, FunctionT, FromElementT>>
 struct FunctorDefinition {
-  typedef typename ContainsT::ElementType ElementT;
-  typedef typename CanBuildFromT::ToT ToT;
-
-  static ToT fmap(const function<OtherElementT(ElementT)>& f,
-                  const CollectionT& collection);
+  // Uses trailing return types to work with lambdas. See:
+  // http://stackoverflow.com/questions/7950680/how-can-i-pass-a-lambda-c11-into-a-templated-function
+  static auto fmap(const FunctionT& f,
+                  const FromCollectionT& collection) ->
+   typename CanBuildFrom<FromCollectionT, decltype(f(fakeInstance(FromElementT)))>::ToT;
 
   static void verify() {
-    typedef decltype(Functor<CollectionT, OtherElementT>::fmap) FMapT;
+    typedef decltype(Functor<FromCollectionT, FunctionT>::fmap) FMapT;
     const bool verifyFMap = is_same<decltype(fmap), FMapT>::value;
     static_assert(verifyFMap, "Functor not properly implemented");
   }
 };
 
-///////////////////////////////////////////
-
-/**
- * Convenience function for Functor.
- */
-template<typename CollectionT, typename OtherElementT,
-    typename ContainsT = Contains<CollectionT>,
-    typename CanBuildFromT = CanBuildFrom<CollectionT, OtherElementT>,
-    typename FunctorT = Functor<CollectionT, OtherElementT, ContainsT,
-        CanBuildFromT>>
-typename CanBuildFromT::ToT fmap(
-    const function<OtherElementT(typename ContainsT::ElementType)>& f,
-    const CollectionT& collection) {
-  return FunctorT::fmap(f, collection);
-}
-
 //////////////////////////////////
 
-template<typename ElementT, typename OtherElementT>
-struct Functor<vector<ElementT>, OtherElementT> {
-  static vector<OtherElementT> fmap(const function<OtherElementT(ElementT)>& f,
-                                    const vector<ElementT>& v) {
-    vector<OtherElementT> output;
+/**
+ * Convenience method for Functor.
+ */
+template<typename FromCollectionT, typename FunctionT,
+    typename FromElementT = typename Contains<FromCollectionT>::ElementType,
+    typename FunctorT = Functor<FromCollectionT, FunctionT, FromElementT>>
+auto fmap(
+    FunctionT f,
+    const FromCollectionT& orig) ->
+    typename CanBuildFrom<FromCollectionT, decltype(f(fakeInstance(FromElementT)))>::ToT {
+  return FunctorT::fmap(f, orig);
+}
+
+/////////////////////////////////
+
+/**
+ * Functor implementation for vector.
+ */
+template<typename FunctionT, typename FromElementT>
+struct Functor<vector<FromElementT>, FunctionT> {
+  static auto fmap(const FunctionT& f, const vector<FromElementT>& v) ->
+  vector<decltype(f(fakeInstance(FromElementT)))> {
+    vector<decltype(f(fakeInstance(FromElementT)))> output;
     output.reserve(v.size());
-    for (const ElementT& e : v) {
+    for (const FromElementT& e : v) {
       output.push_back(f(e));
     }
     return output;
   }
 };
 
-} // namespace salve
+}// namespace salve
 
 #endif /* FUNCTOR_HPP_ */

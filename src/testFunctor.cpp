@@ -1,5 +1,7 @@
 #include "gtest/gtest.h"
 
+#include <type_traits>
+
 #include "salve/Functor.hpp"
 #include "salve/Comparable.hpp"
 
@@ -9,7 +11,8 @@ using namespace std;
 using namespace salve;
 
 TEST(TestFunctor, VectorInt) {
-  FunctorDefinition<vector<int>, vector<int>>::verify();
+  auto add1 = [](int x){ return x + 1; };
+  FunctorDefinition<vector<int>, decltype(add1)>::verify();
 
   const vector<int> ints = { 1, 2, 3 };
 
@@ -28,27 +31,11 @@ TEST(TestFunctor, VectorInt) {
   EXPECT_TRUE(equals(wrapped, golden));
 }
 
-template<typename A, typename Func>
-auto map_(const std::vector<A>& orig,
-          Func f) -> std::vector<decltype(f(orig[0]))> {
-  std::vector<decltype(f(orig[0]))> rv;
-  rv.reserve(orig.size());
-  for (const A& a : orig) {
-    rv.push_back(f(a));
-  }
-  return rv;
-}
-
 TEST(TestFunctor, VectorIntLambdaFunction) {
   const vector<int> ints = { 1, 2, 3 };
 
-  const vector<int> out = map_(ints, [](int x) {return x + 1;});
+  const vector<int> out = fmap([](int x) {return x + 1;}, ints);
 
   const vector<int> golden = { 2, 3, 4 };
   EXPECT_TRUE(equals(out, golden));
-
-  // TODO: This next line should compile (shouldn't need to provide template
-  // parameters or cast the lambda to a function). See:
-  // http://stackoverflow.com/questions/7950680/how-can-i-pass-a-lambda-c11-into-a-templated-function
-//  fmap([](int x){ return x + 1; }, ints);
 }
