@@ -75,10 +75,13 @@ struct Comparable<optional<ElementT>> {
 
   static bool equals(const optional<ElementT>& left,
                      const optional<ElementT>& right) {
+    // They must have the same initialization status.
     if (left.is_initialized() != right.is_initialized())
       return false;
+    // If they're both empty, they're equal.
     else if (!left.is_initialized())
       return true;
+    // They're both initialized, so compare their elements.
     else
       return left.get() == right.get();
   }

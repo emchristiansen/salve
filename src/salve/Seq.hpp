@@ -31,8 +31,7 @@ struct SeqDefinition {
   /**
    * The first element of a Seq. Asserts not empty.
    */
-  // TODO: Make optional.
-  static ElementT head(const CollectionT& seq);
+  static optional<ElementT> headOption(const CollectionT& seq);
 
   /**
    * All the elements but the first.
@@ -77,7 +76,7 @@ struct SeqDefinition {
 
   // TODO: Macro to remove boilerplate.
   static bool verify() {
-    verifyMethod(Seq, head, CollectionT, ContainsT)
+    verifyMethod(Seq, headOption, CollectionT, ContainsT)
     verifyMethod(Seq, tail, CollectionT, ContainsT)
     verifyMethod(Seq, init, CollectionT, ContainsT)
     verifyMethod(Seq, last, CollectionT, ContainsT)
@@ -97,8 +96,8 @@ struct SeqDefinition {
  */
 template<typename CollectionT, typename ContainsT = Contains<CollectionT>,
     typename SeqT = Seq<CollectionT, ContainsT>>
-typename ContainsT::ElementType head(const CollectionT& seq) {
-  return SeqT::head(seq);
+optional<typename ContainsT::ElementType> headOption(const CollectionT& seq) {
+  return SeqT::headOption(seq);
 }
 
 /**
@@ -135,10 +134,9 @@ typename ContainsT::ElementType last(const CollectionT& seq) {
  */
 template<typename ElementT>
 struct Seq<vector<ElementT>, Contains<vector<ElementT>>> {
-static int head(const vector<ElementT>& v) {
-  // TODO
-  assert(v.size() > 0);
-  return v.at(0);
+static optional<ElementT> headOption(const vector<ElementT>& v) {
+  if (v.size() == 0) return optional<ElementT>();
+  else return optional<ElementT>(v.at(0));
 }
 
 static vector<ElementT> tail(const vector<ElementT>& v) {

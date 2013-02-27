@@ -1,17 +1,20 @@
 #include "gtest/gtest.h"
 
+#include <boost/optional.hpp>
+
 #include "salve/Seq.hpp"
 #include "salve/Comparable.hpp"
 
 ///////////////////////////
 
 using namespace std;
+using namespace boost;
 using namespace salve;
 
 TEST(TestSeq, VectorInt) {
   vector<int> ints = { 1, 2, 3, 4 };
 
-  EXPECT_EQ(head(ints), 1);
+  EXPECT_TRUE(equals(headOption(ints), optional<int>(1)));
 
   vector<int> intsTail = { 2, 3, 4 };
   EXPECT_TRUE(equals(tail(ints), intsTail));
