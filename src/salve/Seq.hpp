@@ -1,6 +1,10 @@
 #ifndef SEQ_HPP_
 #define SEQ_HPP_
 
+#include <functional>
+
+#include <boost/optional.hpp>
+
 #include "Contains.hpp"
 #include "collections.hpp"
 #include "macros.hpp"
@@ -10,6 +14,7 @@ namespace salve {
 ////////////////////
 
 using namespace std;
+using boost::optional;
 
 /**
  * A container that supports the operations you see below.
@@ -26,6 +31,7 @@ struct SeqDefinition {
   /**
    * The first element of a Seq. Asserts not empty.
    */
+  // TODO: Make optional.
   static ElementT head(const CollectionT& seq);
 
   /**
@@ -41,7 +47,33 @@ struct SeqDefinition {
   /**
    * The last element. Asserts not empty.
    */
+  // TOOO: Rename to "collection".
+  // TODO: Make optional.
   static ElementT last(const CollectionT& seq);
+
+  /**
+   * Returns a new collection consisting of the first |num| elements.
+   */
+  static CollectionT take(const CollectionT& collection, const int num);
+
+  /**
+   * Returns a new collection consisting of the last
+   * |collection.size() - num| elements.
+   */
+  static CollectionT drop(const CollectionT& collection, const int num);
+
+  /**
+   * Returns a new collection consisting of the elements that satisfy the
+   * predicate.
+   */
+  static CollectionT filter(const CollectionT& collection,
+                            const function<bool(ElementT)> predicate);
+
+  /**
+   * Returns the index of the first element satisfying the predicate.
+   */
+  static optional<int> indexOfOption(const CollectionT& collection,
+                                     const function<bool(ElementT)> predicate);
 
   // TODO: Macro to remove boilerplate.
   static bool verify() {
@@ -49,8 +81,13 @@ struct SeqDefinition {
     verifyMethod(Seq, tail, CollectionT, ContainsT)
     verifyMethod(Seq, init, CollectionT, ContainsT)
     verifyMethod(Seq, last, CollectionT, ContainsT)
-  return true;
-}
+
+//    verifyMethod(Seq, take, CollectionT, ContainsT)
+//    verifyMethod(Seq, drop, CollectionT, ContainsT)
+//    verifyMethod(Seq, filter, CollectionT, ContainsT)
+    //    verifyMethod(Seq, indexOfOption, CollectionT, ContainsT)
+    return true;
+  }
 };
 
 //////////////////////

@@ -1,6 +1,8 @@
 #ifndef COMPARABLE_HPP_
 #define COMPARABLE_HPP_
 
+#include <boost/optional.hpp>
+
 #include <typeinfo>
 #include "macros.hpp"
 
@@ -9,6 +11,7 @@
 namespace salve {
 
 using namespace std;
+using boost::optional;
 
 template<typename A>
 struct Comparable;
@@ -39,18 +42,24 @@ struct Comparable<int> {
   }
 };
 
+verifyImplementation(Comparable, int)
+
+//////////////////////////////////////
+
 template<typename ElementT>
 struct Comparable<vector<ElementT>> {
   typedef Comparable<ElementT> ComparableT;
 
   static bool equals(const vector<ElementT>& left,
                      const vector<ElementT>& right) {
-    if (left.size() != right.size()) return false;
+    if (left.size() != right.size())
+      return false;
 
     auto leftElement = left.begin();
     auto rightElement = right.begin();
     for (; leftElement != left.end(); ++leftElement, ++rightElement) {
-      if (!ComparableT::equals(*leftElement, *rightElement)) return false;
+      if (!ComparableT::equals(*leftElement, *rightElement))
+        return false;
     }
     return true;
   }
@@ -58,6 +67,25 @@ struct Comparable<vector<ElementT>> {
 
 verifyImplementation(Comparable, vector<int>)
 
-} // namespace salve
+//////////////////////////////////
+
+template<typename ElementT>
+struct Comparable<optional<ElementT>> {
+  typedef Comparable<ElementT> ComparableT;
+
+  static bool equals(const optional<ElementT>& left,
+                     const optional<ElementT>& right) {
+    if (left.is_initialized() != right.is_initialized())
+      return false;
+    else if (!left.is_initialized())
+      return true;
+    else
+      return left.get() == right.get();
+  }
+};
+
+verifyImplementation(Comparable, optional<int>)
+
+}  // namespace salve
 
 #endif /* COMPARABLE_HPP_ */
