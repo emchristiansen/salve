@@ -18,9 +18,7 @@ struct ComparableDefinition {
   static bool equals(const A& left, const A& right);
 
   static bool verify() {
-    typedef decltype(Comparable<A>::equals) EqualsT;
-    const bool verifyEquals = is_same<decltype(equals), EqualsT>::value;
-    static_assert(verifyEquals, "Comparable not properly implemented");
+    verifyMethod(Comparable, equals, A)
     return true;
   }
 };

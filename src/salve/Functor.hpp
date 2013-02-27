@@ -43,9 +43,7 @@ struct FunctorDefinition {
       typename CanBuildFrom<FromCollectionT, decltype(f(fakeInstance(FromElementT)))>::ToT;
 
   static bool verify() {
-    typedef decltype(Functor<FromCollectionT, FunctionT>::fmap) FMapT;
-    const bool verifyFMap = is_same<decltype(fmap), FMapT>::value;
-    static_assert(verifyFMap, "Functor not properly implemented");
+    verifyMethod(Functor, fmap, FromCollectionT, FunctionT)
     return true;
   }
 };

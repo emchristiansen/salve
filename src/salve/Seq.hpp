@@ -44,26 +44,13 @@ struct SeqDefinition {
   static ElementT last(const CollectionT& seq);
 
   // TODO: Macro to remove boilerplate.
-  // TODO: Macro to put call to this in anon namespace in header files.
   static bool verify() {
-    typedef decltype(Seq<CollectionT, ContainsT>::head) HeadT;
-    const bool headEquals = is_same<decltype(head), HeadT>::value;
-    static_assert(headEquals, "Seq not implemented properly");
-
-    typedef decltype(Seq<CollectionT, ContainsT>::tail) TailT;
-    const bool tailEquals = is_same<decltype(tail), TailT>::value;
-    static_assert(tailEquals, "Seq not implemented properly");
-
-    typedef decltype(Seq<CollectionT, ContainsT>::init) InitT;
-    const bool initEquals = is_same<decltype(init), InitT>::value;
-    static_assert(initEquals, "Seq not implemented properly");
-
-    typedef decltype(Seq<CollectionT, ContainsT>::last) LastT;
-    const bool lastEquals = is_same<decltype(last), LastT>::value;
-    static_assert(lastEquals, "Seq not implemented properly");
-
-    return true;
-  }
+    verifyMethod(Seq, head, CollectionT, ContainsT)
+    verifyMethod(Seq, tail, CollectionT, ContainsT)
+    verifyMethod(Seq, init, CollectionT, ContainsT)
+    verifyMethod(Seq, last, CollectionT, ContainsT)
+  return true;
+}
 };
 
 //////////////////////
@@ -111,7 +98,7 @@ typename ContainsT::ElementType last(const CollectionT& seq) {
  */
 template<typename ElementT>
 struct Seq<vector<ElementT>, Contains<vector<ElementT>>> {
-static ElementT head(const vector<ElementT>& v) {
+static int head(const vector<ElementT>& v) {
   // TODO
   assert(v.size() > 0);
   return v.at(0);

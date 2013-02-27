@@ -21,9 +21,7 @@ struct ShowableDefinition {
   static string show(const A& a);
 
   static bool verify() {
-    typedef decltype(Showable<A>::show) ShowT;
-    const bool verifyShow = is_same<decltype(show), ShowT>::value;
-    static_assert(verifyShow, "Showable not properly implemented");
+    verifyMethod(Showable, show, A)
     return true;
   }
 };
