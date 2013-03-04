@@ -13,17 +13,8 @@ using namespace std;
 /**
  * Anything which can be displayed as a string.
  */
-template<typename A>
-struct Showable;
-
-template<typename A>
-struct ShowableDefinition {
-  static string show(const A& a);
-
-  static bool verify() {
-    verifyMethod(Showable, show, A)
-    return true;
-  }
+TYPECLASS(Showable, (A)) {
+  virtual string show(const A& a) = 0;
 };
 
 ////////////////////////////
@@ -33,7 +24,7 @@ struct ShowableDefinition {
  */
 template<typename A, typename ShowableT = Showable<A>>
 string show(const A& a) {
-  return ShowableT::show(a);
+  return ShowableT().show(a);
 }
 
 /////////////////////////////
@@ -42,13 +33,11 @@ string show(const A& a) {
  * Says a string is Showable.
  */
 template<>
-struct Showable<string> {
-  static string show(const string& a) {
+INSTANCE(Showable, (string)) {
+  string show(const string& a) override {
     return a;
   }
 };
-
-verifyImplementation(Showable, string)
 
 ////////////////////////////////////
 
@@ -56,15 +45,13 @@ verifyImplementation(Showable, string)
  * Says an int is Showable.
  */
 template<>
-struct Showable<int> {
-  static string show(const int& a) {
+INSTANCE(Showable, (int)) {
+  string show(const int& a) override {
     stringstream buffer;
     buffer << a;
     return buffer.str();
   }
 };
-
-verifyImplementation(Showable, int)
 
 ////////////////////////////////////
 
@@ -73,15 +60,13 @@ verifyImplementation(Showable, int)
  */
 // TODO: Add a way to control precision in the output.
 template<>
-struct Showable<double> {
-  static string show(const double& a) {
+INSTANCE(Showable, (double)) {
+  string show(const double& a) override {
     stringstream buffer;
     buffer << a;
     return buffer.str();
   }
 };
-
-verifyImplementation(Showable, double)
 
 ////////////////////////////////////////
 
@@ -90,26 +75,24 @@ verifyImplementation(Showable, double)
  */
 // "default template arguments may not be used in partial specializations"
 template<typename ElementT>
-struct Showable<vector<ElementT>> {
+INSTANCE(Showable, (vector<ElementT>)) {
   typedef Showable<ElementT> ShowableT;
 
-  static string show(const vector<ElementT>& a) {
+  string show(const vector<ElementT>& a) override {
     stringstream buffer;
     buffer << "[";
     for (int index : range<int>(0, a.size() - 1)) {
-      buffer << ShowableT::show(a.at(index)) << ", ";
+      buffer << ShowableT().show(a.at(index)) << ", ";
     }
     // TODO: Replace with last.
     if (a.size() > 0)
-      buffer << ShowableT::show(a.at(a.size() - 1));
+      buffer << ShowableT().show(a.at(a.size() - 1));
 //    buffer << ShowableT::show(last(a));
     buffer << "]";
 
     return buffer.str();
   }
 };
-
-verifyImplementation(Showable, vector<int>)
 
 }  // namespace salve
 
