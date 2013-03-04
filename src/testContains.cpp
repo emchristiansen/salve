@@ -9,5 +9,5 @@
 using namespace salve;
 
 TEST(TestContains, VectorContainsInt) {
-  static_assert(is_same<Contains<vector<int>>::ElementType, int>::value, "");
+  static_assert(is_same<Contains<vector<int>>::ElementT, int>::value, "");
 }

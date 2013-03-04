@@ -21,72 +21,54 @@ using boost::optional;
  * Modeled on Scala's Seq:
  * http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.Seq
  */
-template<typename CollectionT, typename ContainsT = Contains<CollectionT>>
-struct Seq;
-
-template<typename CollectionT, typename ContainsT = Contains<CollectionT>>
-struct SeqDefinition {
-  typedef typename ContainsT::ElementType ElementT;
+TYPECLASS(Seq, (CollectionT)) {
+  typedef typename Contains<CollectionT>::ElementT ElementT;
 
   /**
    * The first element of a Seq. Asserts not empty.
    */
-  static optional<ElementT> headOption(const CollectionT& seq);
+  virtual optional<ElementT> headOption(const CollectionT& seq) = 0;
 
   /**
    * All the elements but the first.
    */
-  static CollectionT tail(const CollectionT& seq);
+  virtual CollectionT tail(const CollectionT& seq) = 0;
 
   /**
    * All the elements but the last.
    */
-  static CollectionT init(const CollectionT& seq);
+  virtual CollectionT init(const CollectionT& seq) = 0;
 
   /**
    * The last element. Asserts not empty.
    */
   // TOOO: Rename to "collection".
   // TODO: Make optional.
-  static ElementT last(const CollectionT& seq);
+  virtual ElementT last(const CollectionT& seq) = 0;
 
-  /**
-   * Returns a new collection consisting of the first |num| elements.
-   */
-  static CollectionT take(const CollectionT& collection, const int num);
-
-  /**
-   * Returns a new collection consisting of the last
-   * |collection.size() - num| elements.
-   */
-  static CollectionT drop(const CollectionT& collection, const int num);
-
-  /**
-   * Returns a new collection consisting of the elements that satisfy the
-   * predicate.
-   */
-  static CollectionT filter(const CollectionT& collection,
-                            const function<bool(ElementT)> predicate);
-
-  /**
-   * Returns the index of the first element satisfying the predicate.
-   */
-  static optional<int> indexOfOption(const CollectionT& collection,
-                                     const function<bool(ElementT)> predicate);
-
-  // TODO: Macro to remove boilerplate.
-  static bool verify() {
-    verifyMethod(Seq, headOption, CollectionT, ContainsT)
-    verifyMethod(Seq, tail, CollectionT, ContainsT)
-    verifyMethod(Seq, init, CollectionT, ContainsT)
-    verifyMethod(Seq, last, CollectionT, ContainsT)
-
-//    verifyMethod(Seq, take, CollectionT, ContainsT)
-//    verifyMethod(Seq, drop, CollectionT, ContainsT)
-//    verifyMethod(Seq, filter, CollectionT, ContainsT)
-    //    verifyMethod(Seq, indexOfOption, CollectionT, ContainsT)
-    return true;
-  }
+//  /**
+//   * Returns a new collection consisting of the first |num| elements.
+//   */
+//  virtual CollectionT take(const CollectionT& collection, const int num) = 0;
+//
+//  /**
+//   * Returns a new collection consisting of the last
+//   * |collection.size() - num| elements.
+//   */
+//  virtual CollectionT drop(const CollectionT& collection, const int num) = 0;
+//
+//  /**
+//   * Returns a new collection consisting of the elements that satisfy the
+//   * predicate.
+//   */
+//  virtual CollectionT filter(const CollectionT& collection,
+//                            const function<bool(ElementT)> predicate) = 0;
+//
+//  /**
+//   * Returns the index of the first element satisfying the predicate.
+//   */
+//  virtual optional<int> indexOfOption(const CollectionT& collection,
+//                                     const function<bool(ElementT)> predicate) = 0;
 };
 
 //////////////////////
@@ -94,37 +76,37 @@ struct SeqDefinition {
 /**
  * Convenience function for Seq.
  */
-template<typename CollectionT, typename ContainsT = Contains<CollectionT>,
-    typename SeqT = Seq<CollectionT, ContainsT>>
-optional<typename ContainsT::ElementType> headOption(const CollectionT& seq) {
-  return SeqT::headOption(seq);
+template<typename CollectionT,
+    typename SeqT = Seq<CollectionT>>
+optional<typename SeqT::ElementT> headOption(const CollectionT& seq) {
+  return SeqT().headOption(seq);
 }
 
 /**
  * Convenience function for Seq.
  */
-template<typename CollectionT, typename ContainsT = Contains<CollectionT>,
-    typename SeqT = Seq<CollectionT, ContainsT>>
+template<typename CollectionT,
+    typename SeqT = Seq<CollectionT>>
 CollectionT tail(const CollectionT& seq) {
-  return SeqT::tail(seq);
+  return SeqT().tail(seq);
 }
 
 /**
  * Convenience function for Seq.
  */
-template<typename CollectionT, typename ContainsT = Contains<CollectionT>,
-    typename SeqT = Seq<CollectionT, ContainsT>>
+template<typename CollectionT,
+    typename SeqT = Seq<CollectionT>>
 CollectionT init(const CollectionT& seq) {
-  return SeqT::init(seq);
+  return SeqT().init(seq);
 }
 
 /**
  * Convenience function for Seq.
  */
-template<typename CollectionT, typename ContainsT = Contains<CollectionT>,
-    typename SeqT = Seq<CollectionT, ContainsT>>
-typename ContainsT::ElementType last(const CollectionT& seq) {
-  return SeqT::last(seq);
+template<typename CollectionT,
+    typename SeqT = Seq<CollectionT>>
+typename SeqT::ElementT last(const CollectionT& seq) {
+  return SeqT().last(seq);
 }
 
 //////////////////////
@@ -133,13 +115,13 @@ typename ContainsT::ElementType last(const CollectionT& seq) {
  * Says a vector<ElementT> is a Seq.
  */
 template<typename ElementT>
-struct Seq<vector<ElementT>, Contains<vector<ElementT>>> {
-static optional<ElementT> headOption(const vector<ElementT>& v) {
+INSTANCE(Seq, (vector<ElementT>)) {
+optional<ElementT> headOption(const vector<ElementT>& v) override {
   if (v.size() == 0) return optional<ElementT>();
   else return optional<ElementT>(v.at(0));
 }
 
-static vector<ElementT> tail(const vector<ElementT>& v) {
+vector<ElementT> tail(const vector<ElementT>& v) override {
   vector<ElementT> output;
   output.reserve(v.size() - 1);
   for (int index : range<int>(1, v.size())) {
@@ -148,7 +130,7 @@ static vector<ElementT> tail(const vector<ElementT>& v) {
   return output;
 }
 
-static vector<ElementT> init(const vector<ElementT>& v) {
+vector<ElementT> init(const vector<ElementT>& v) override {
   vector<ElementT> output;
   output.reserve(v.size() - 1);
   for (int index : range<int>(0, v.size() - 1)) {
@@ -157,14 +139,12 @@ static vector<ElementT> init(const vector<ElementT>& v) {
   return output;
 }
 
-static ElementT last(const vector<ElementT>& v) {
+ElementT last(const vector<ElementT>& v) override {
   // TODO
   assert(v.size() > 0);
   return v.at(v.size() - 1);
 }
 };
-
-verifyImplementation(Seq, vector<int>)
 
 }  // namespace salve
 

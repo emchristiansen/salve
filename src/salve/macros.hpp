@@ -11,6 +11,15 @@ namespace salve {
 
 using namespace std;
 
+/**
+ * Returns a value of the specified type.
+ * Used only for compile-time hackery; evaluating this at runtime will
+ * cause a segmentation fault.
+ */
+#define fakeInstance(T) *reinterpret_cast<T*>(0)
+
+/////////////////////////////////////////
+
 #define ADD_COMMA_AND_TYPENAME(r, data, i, type) \
   BOOST_PP_COMMA_IF(i) typename type
 

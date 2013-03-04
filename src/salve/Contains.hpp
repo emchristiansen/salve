@@ -15,16 +15,9 @@ using namespace std;
  * This says a collection CollectionT contains type ElementT.
  * For example, vector<int> contains type int.
  */
-// TODO: Can I remove this "void"?
-template<typename CollectionT>
-struct Contains;
-
-template<typename CollectionT>
-struct ContainsDefinition {
-  static bool verify() {
-    typedef typename Contains<CollectionT>::ElementType Trash;
-    return true;
-  }
+TYPECLASS(Contains, (CollectionT)) {
+  // TODO
+//  virtual typedef ElementT;
 };
 
 ////////////////////////////////
@@ -33,13 +26,11 @@ struct ContainsDefinition {
  * This says vector<E> contains type E.
  * TODO: There is redundancy here.
  */
-template<typename ElementT>
-struct Contains<vector<ElementT>> {
+template<typename _ElementT>
+INSTANCE(Contains, (vector<_ElementT>)) {
   // TODO: Rename
-  typedef ElementT ElementType;
+  typedef _ElementT ElementT;
 };
-
-verifyImplementation(Contains, vector<int>)
 
 } // namespace salve
 

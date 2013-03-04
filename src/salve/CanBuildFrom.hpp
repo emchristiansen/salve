@@ -14,15 +14,10 @@ using namespace std;
  * CanBuildFrom:
  * http://www.scala-lang.org/api/current/index.html#scala.collection.generic.CanBuildFrom
  */
-template<typename FromT, typename ElementT>
-struct CanBuildFrom;
-
-template<typename FromT, typename ElementT>
-struct CanBuildFromDefinition {
-  static bool verify() {
-    typedef typename CanBuildFrom<FromT, ElementT>::ToT Trash;
-    return true;
-  }
+TYPECLASS(CanBuildFrom, (FromT)(ElementT)) {
+  // TODO: Find a way to enforce this constraint. See:
+  // http://stackoverflow.com/questions/15209663/c-pure-virtual-type
+//  virtual typedef ToT;
 };
 
 /////////////////////////////
@@ -31,11 +26,9 @@ struct CanBuildFromDefinition {
  * Says can make a vector<ToElementT> from a vector<FromElementT>.
  */
 template<typename FromElementT, typename ToElementT>
-struct CanBuildFrom<vector<FromElementT>, ToElementT> {
+INSTANCE(CanBuildFrom, (vector<FromElementT>)(ToElementT)) {
   typedef vector<ToElementT> ToT;
 };
-
-verifyImplementation(CanBuildFrom, vector<int>, int)
 
 } // namespace salve
 
