@@ -27,24 +27,23 @@ TYPECLASS(Seq, (CollectionT)) {
   /**
    * The first element of a Seq. Asserts not empty.
    */
-  virtual optional<ElementT> headOption(const CollectionT& seq) = 0;
+  virtual optional<ElementT> headOption(const CollectionT& collection) = 0;
 
   /**
    * All the elements but the first.
    */
-  virtual CollectionT tail(const CollectionT& seq) = 0;
+  virtual CollectionT tail(const CollectionT& collection) = 0;
 
   /**
    * All the elements but the last.
    */
-  virtual CollectionT init(const CollectionT& seq) = 0;
+  virtual CollectionT init(const CollectionT& collection) = 0;
 
   /**
    * The last element. Asserts not empty.
    */
   // TOOO: Rename to "collection".
-  // TODO: Make optional.
-  virtual ElementT last(const CollectionT& seq) = 0;
+  virtual ElementT last(const CollectionT& collection) = 0;
 
 //  /**
 //   * Returns a new collection consisting of the first |num| elements.
