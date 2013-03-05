@@ -1,5 +1,4 @@
-#ifndef COLLECTIONS_HPP_
-#define COLLECTIONS_HPP_
+#pragma once
 
 #include <boost/range/irange.hpp>
 
@@ -25,4 +24,3 @@ boost::integer_range<IntT> range(const IntT begin, const IntT end) {
 
 } // namespace salve
 
-#endif /* COLLECTIONS_HPP_ */

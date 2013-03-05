@@ -1,5 +1,4 @@
-#ifndef TYPECLASSES_HPP_
-#define TYPECLASSES_HPP_
+#pragma once
 
 #include "collections.hpp"
 #include "macros.hpp"
@@ -93,4 +92,3 @@ INSTANCE(Showable, (vector<ElementT>)) {
 
 }  // namespace salve
 
-#endif /* TYPECLASSES_HPP_ */

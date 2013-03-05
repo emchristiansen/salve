@@ -12,9 +12,6 @@ using namespace std;
 using namespace salve;
 
 TEST(TestFunctor, VectorInt) {
-  auto add1 = [](int x){ return x + 1; };
-//  FunctorDefinition<vector<int>, decltype(add1)>::verify();
-
   const vector<int> ints = { 1, 2, 3 };
 
   const function<vector<int>(int)> wrap = [](int n) {

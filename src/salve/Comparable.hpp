@@ -1,5 +1,4 @@
-#ifndef COMPARABLE_HPP_
-#define COMPARABLE_HPP_
+#pragma once
 
 #include <typeinfo>
 
@@ -74,4 +73,3 @@ INSTANCE(Comparable, (optional<ElementT>)) {
 
 }  // namespace salve
 
-#endif /* COMPARABLE_HPP_ */

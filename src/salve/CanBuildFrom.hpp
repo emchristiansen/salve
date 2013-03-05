@@ -1,5 +1,4 @@
-#ifndef CANBUILDFROM_HPP_
-#define CANBUILDFROM_HPP_
+#pragma once
 
 #include "macros.hpp"
 
@@ -32,4 +31,3 @@ INSTANCE(CanBuildFrom, (vector<FromElementT>)(ToElementT)) {
 
 } // namespace salve
 
-#endif /* CANBUILDFROM_HPP_ */

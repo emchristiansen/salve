@@ -1,5 +1,4 @@
-#ifndef CONTAINS_HPP_
-#define CONTAINS_HPP_
+#pragma once
 
 #include <type_traits>
 
@@ -34,4 +33,4 @@ INSTANCE(Contains, (vector<_ElementT>)) {
 
 } // namespace salve
 
-#endif /* CONTAINS_HPP_ */
+

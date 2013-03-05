@@ -1,5 +1,4 @@
-#ifndef SEQ_HPP_
-#define SEQ_HPP_
+#pragma once
 
 #include <functional>
 
@@ -119,4 +118,3 @@ ElementT last(const vector<ElementT>& v) override {
 
 }  // namespace salve
 
-#endif /* SEQ_HPP_ */

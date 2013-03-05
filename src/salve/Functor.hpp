@@ -1,5 +1,4 @@
-#ifndef FUNCTOR_HPP_
-#define FUNCTOR_HPP_
+#pragma once
 
 #include <functional>
 
@@ -60,4 +59,4 @@ INSTANCE(Functor, (vector<FromElementT>)(FunctionT)) {
 
 }  // namespace salve
 
-#endif /* FUNCTOR_HPP_ */
+

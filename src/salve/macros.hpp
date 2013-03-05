@@ -1,5 +1,4 @@
-#ifndef MACROS_HPP_
-#define MACROS_HPP_
+#pragma once
 
 #include <boost/preprocessor/seq/for_each.hpp>
 #include <boost/preprocessor/seq/for_each_i.hpp>
@@ -101,6 +100,13 @@ using namespace std;
   struct typeclass ## Implementation <ADD_COMMAS(types)> : \
   typeclass ## Interface <ADD_COMMAS(types)>
 
+///////////////////////////////////////
+
+// TODO: Force show to be imported for this to be defined.
+#define PRINTLN(x) cout << show(x) << endl
+
+/////////////////////////////////////
+
 /**
  * Generates the boilerplate needed to ensure a given method is implemented
  * properly for a given interface.
@@ -135,4 +141,3 @@ using namespace std;
 
 }  // namespace salve
 
-#endif /* MACROS_HPP_ */

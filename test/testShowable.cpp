@@ -9,7 +9,7 @@ using namespace salve;
 
 TEST(TestShowable, String) {
   // TODO: Remove the need for this explicit type parameter.
-  EXPECT_EQ("hi", show<string>("hi"));
+  EXPECT_EQ("hi", show(string("hi")));
 }
 
 TEST(TestShowable, Int) {
