@@ -35,35 +35,58 @@ using namespace std;
 ////////////////////////////////////
 
 #define TYPECLASS_DECLARE_IMPLEMENTATION(typeclass, types) \
-    template<ADD_COMMAS_AND_TYPENAMES(types)> \
-    struct typeclass ## Implementation;
+  template<ADD_COMMAS_AND_TYPENAMES(types)> \
+  struct typeclass ## Implementation;
 
 #define TYPECLASS_DECLARE_INTERFACE(typeclass, types) \
-    template<ADD_COMMAS_AND_TYPENAMES(types)> \
-    struct typeclass ## Interface;
+  template<ADD_COMMAS_AND_TYPENAMES(types)> \
+  struct typeclass ## Interface;
 
 #define TYPECLASS_BRIDGE(typeclass, types) \
-    template<ADD_COMMAS_AND_TYPENAMES(types), \
-             typename ImplementationT = typename enable_if< \
-        is_base_of<typeclass ## Interface<ADD_COMMAS(types)>, \
-          typeclass ## Implementation<ADD_COMMAS(types)>>::value, \
-        typeclass ## Implementation<ADD_COMMAS(types)>>::type> \
-    struct typeclass : public ImplementationT { \
-    };
+  template<ADD_COMMAS_AND_TYPENAMES(types), \
+           typename ImplementationT = typename enable_if< \
+      is_base_of<typeclass ## Interface<ADD_COMMAS(types)>, \
+        typeclass ## Implementation<ADD_COMMAS(types)>>::value, \
+      typeclass ## Implementation<ADD_COMMAS(types)>>::type> \
+  struct typeclass : public ImplementationT { \
+  };
 
 #define TYPECLASS_DEFINE_INTERFACE(typeclass, types) \
-    template<ADD_COMMAS_AND_TYPENAMES(types)> \
-    struct typeclass ## Interface
+  template<ADD_COMMAS_AND_TYPENAMES(types)> \
+  struct typeclass ## Interface
 
 #define TYPECLASS(typeclass, types) \
-    TYPECLASS_DECLARE_INTERFACE(typeclass, types) \
-    TYPECLASS_DECLARE_IMPLEMENTATION(typeclass, types) \
-    TYPECLASS_BRIDGE(typeclass, types) \
-    TYPECLASS_DEFINE_INTERFACE(typeclass, types)
+  TYPECLASS_DECLARE_INTERFACE(typeclass, types) \
+  TYPECLASS_DECLARE_IMPLEMENTATION(typeclass, types) \
+  TYPECLASS_BRIDGE(typeclass, types) \
+  TYPECLASS_DEFINE_INTERFACE(typeclass, types)
 
 ////////////////////////////////////
 
-//#define TYPECLASS_EXPOSE(typeclass, types, member) \
+#define GENERATE_ARGUMENT_NAME(r, data, i, trash) \
+  BOOST_PP_COMMA_IF(i) _autogen ## i
+
+#define GENERATE_ARGUMENT_NAMES(argumentTypes) \
+  BOOST_PP_SEQ_FOR_EACH_I(GENERATE_ARGUMENT_NAME,, argumentTypes)
+
+#define GENERATE_ARGUMENT_PAIR(r, data, i, argumentType) \
+  BOOST_PP_COMMA_IF(i) const argumentType& _autogen ## i
+
+#define GENERATE_ARGUMENT_LIST(argumentTypes) \
+  BOOST_PP_SEQ_FOR_EACH_I(GENERATE_ARGUMENT_PAIR,, argumentTypes)
+
+/**
+ * Puts a typeclass member function in the top-level namespace.
+ * |member| is the name of the member function.
+ * |argumentTypes| is the list of types the function takes.
+ */
+#define EXPOSE(typeclass, types, member, argumentTypes) \
+  template<ADD_COMMAS_AND_TYPENAMES(types), \
+    typename typeclass ## T = typeclass<ADD_COMMAS(types)>> \
+  auto member (GENERATE_ARGUMENT_LIST(argumentTypes)) -> \
+  decltype(typeclass ## T(). member (GENERATE_ARGUMENT_NAMES(argumentTypes))) { \
+  return typeclass ## T(). member (GENERATE_ARGUMENT_NAMES(argumentTypes)); \
+  }
 
 
 ////////////////////////////////////

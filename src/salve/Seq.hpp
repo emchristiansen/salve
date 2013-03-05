@@ -74,40 +74,12 @@ TYPECLASS(Seq, (CollectionT)) {
 //////////////////////
 
 /**
- * Convenience function for Seq.
+ * Convenience functions for Seq.
  */
-template<typename CollectionT,
-    typename SeqT = Seq<CollectionT>>
-optional<typename SeqT::ElementT> headOption(const CollectionT& seq) {
-  return SeqT().headOption(seq);
-}
-
-/**
- * Convenience function for Seq.
- */
-template<typename CollectionT,
-    typename SeqT = Seq<CollectionT>>
-CollectionT tail(const CollectionT& seq) {
-  return SeqT().tail(seq);
-}
-
-/**
- * Convenience function for Seq.
- */
-template<typename CollectionT,
-    typename SeqT = Seq<CollectionT>>
-CollectionT init(const CollectionT& seq) {
-  return SeqT().init(seq);
-}
-
-/**
- * Convenience function for Seq.
- */
-template<typename CollectionT,
-    typename SeqT = Seq<CollectionT>>
-typename SeqT::ElementT last(const CollectionT& seq) {
-  return SeqT().last(seq);
-}
+EXPOSE(Seq, (CollectionT), headOption, (CollectionT))
+EXPOSE(Seq, (CollectionT), tail, (CollectionT))
+EXPOSE(Seq, (CollectionT), init, (CollectionT))
+EXPOSE(Seq, (CollectionT), last, (CollectionT))
 
 //////////////////////
 

@@ -37,14 +37,7 @@ TYPECLASS(Functor, (FromCollectionT)(FunctionT)) {
 /**
  * Convenience method for Functor.
  */
-template<typename FromCollectionT, typename FunctionT,
-    typename FunctorT = Functor<FromCollectionT, FunctionT>>
-auto fmap(
-    FunctionT f,
-    const FromCollectionT& orig) ->
-    typename CanBuildFrom<FromCollectionT, decltype(f(fakeInstance(typename FunctorT::FromElementT)))>::ToT {
-  return FunctorT().fmap(f, orig);
-}
+EXPOSE(Functor, (FromCollectionT)(FunctionT), fmap, (FunctionT)(FromCollectionT))
 
 /////////////////////////////////
 

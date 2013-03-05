@@ -20,10 +20,7 @@ TYPECLASS(Comparable, (A)) {
 
 //////////////////////////////////////
 
-template<typename A, typename ComparableT = Comparable<A>>
-bool equals(const A& left, const A& right) {
-  return ComparableT().equals(left, right);
-}
+EXPOSE(Comparable, (A), equals, (A)(A))
 
 ///////////////////////////////////////
 

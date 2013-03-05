@@ -22,10 +22,7 @@ TYPECLASS(Showable, (A)) {
 /**
  * Convenience function for Showable.
  */
-template<typename A, typename ShowableT = Showable<A>>
-string show(const A& a) {
-  return ShowableT().show(a);
-}
+EXPOSE(Showable, (A), show, (A))
 
 /////////////////////////////
 
